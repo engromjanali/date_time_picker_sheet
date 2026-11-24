@@ -1,0 +1,20 @@
+name: date_time_picker_sheet
+description: "Date and time picker shown as a bottom sheet or a dialog, with day, month and year views, scroll-wheel times, single or range selection."
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.14.0
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  intl: ^0.20.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:

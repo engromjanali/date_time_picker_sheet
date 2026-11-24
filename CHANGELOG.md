@@ -1,0 +1,17 @@
+## 0.1.0
+
+Breaking: the 0.0.1 `DateTimePickerSheet(onConfirm: ...)` API is replaced.
+
+* Shown as a bottom sheet, a dialog, or `auto` (dialog on screens 600px and wider) through `showDateTimePicker`. The picker returns its result when it closes.
+* Own calendar replaces `syncfusion_flutter_datepicker`, so no commercial licence is needed. It has day, month and year views, a continuous range band, a range preview on hover, and arrows and swipe kept inside the date bounds.
+* Time wheels rebuilt on `ListWheelScrollView`. They work with touch, mouse drag, mouse wheel, trackpad and arrow keys. A wheel stopped between rows snaps back to one, which fixes the confirm button getting stuck disabled on web.
+* 12- or 24-hour time (following the device setting by default), minute steps, and times before the earliest allowed slot shown disabled.
+* `firstDate` and `lastDate` bounds, plus `allowPast`, `startNowOnly`, `todayOnly` and an optional "Now" action.
+* The calendar header always keeps its arrows at the end. The month title shows in full and scales down rather than being cut on narrow screens.
+* Cancel and Confirm stack instead of overflowing on very narrow screens or with long translations.
+* Async `validator`: an error shows inline and keeps the picker open, and a loader shows while it runs.
+* `DateTimePickerThemeData` theme extension, with RTL, dark theme, semantics labels and large text supported.
+
+## 0.0.1
+
+* First version, taken from the 6amMart User App rental date and time picker.
