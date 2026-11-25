@@ -143,6 +143,22 @@ void main() {
     });
   });
 
+  group('primary colour', () {
+    ButtonStyle confirmStyle(WidgetTester tester) => tester.widget<FilledButton>(find.widgetWithText(FilledButton, 'Confirm')).style!;
+
+    testWidgets('primaryColor colours the picker and picks readable text on it', (tester) async {
+      await _open(tester, DateTimePickerConfig(initialStart: DateTime(2030, 3, 14, 10, 30), primaryColor: const Color(0xFFFFEB3B)));
+      expect(confirmStyle(tester).backgroundColor!.resolve({}), const Color(0xFFFFEB3B));
+      expect(confirmStyle(tester).foregroundColor!.resolve({}), Colors.black);
+    });
+
+    testWidgets('without primaryColor the theme colour is used', (tester) async {
+      await _open(tester, DateTimePickerConfig(initialStart: DateTime(2030, 3, 14, 10, 30)));
+      final BuildContext context = tester.element(find.text('Confirm'));
+      expect(confirmStyle(tester).backgroundColor!.resolve({}), Theme.of(context).colorScheme.primary);
+    });
+  });
+
   group('validator', () {
     testWidgets('an error keeps the picker open and shows it', (tester) async {
       final DateTimePickerConfig config = DateTimePickerConfig(

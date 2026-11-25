@@ -9,6 +9,7 @@ import 'date_time_picker_config.dart';
 import 'date_time_picker_labels.dart';
 import 'date_time_picker_result.dart';
 import 'picker_style.dart';
+import 'theme/date_time_picker_theme.dart';
 import 'time/time_picker.dart';
 import 'time/time_wheel.dart';
 
@@ -102,7 +103,8 @@ class _DateTimePickerState extends State<DateTimePicker> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final DateTimePickerLabels labels = widget.config.labels;
-    return ListenableBuilder(
+    final Color? primaryColor = widget.config.primaryColor;
+    final Widget picker = ListenableBuilder(
       listenable: _controller,
       builder: (BuildContext context, _) => Padding(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
@@ -136,6 +138,22 @@ class _DateTimePickerState extends State<DateTimePicker> {
         ]),
       ),
     );
+    if (primaryColor == null) return picker;
+    return Theme(data: _withPrimaryColor(theme, primaryColor), child: picker);
+  }
+
+  ThemeData _withPrimaryColor(ThemeData theme, Color primaryColor) {
+    // Only the selection colours change; every other picker override the app set is kept.
+    final DateTimePickerThemeData current = theme.extension<DateTimePickerThemeData>() ?? const DateTimePickerThemeData();
+    final bool isDarkColor = ThemeData.estimateBrightnessForColor(primaryColor) == Brightness.dark;
+    final DateTimePickerThemeData picker = current.copyWith(
+      selectedColor: primaryColor,
+      onSelectedColor: current.onSelectedColor ?? (isDarkColor ? Colors.white : Colors.black),
+    );
+    return theme.copyWith(extensions: [
+      ...theme.extensions.values.where((ThemeExtension<dynamic> extension) => extension is! DateTimePickerThemeData),
+      picker,
+    ]);
   }
 }
 

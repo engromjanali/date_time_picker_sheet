@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show Color;
 
 import 'date_time_picker_labels.dart';
 import 'date_time_picker_result.dart';
@@ -24,11 +25,13 @@ class DateTimePickerConfig {
   // Returning a message keeps the picker open and shows it; null lets the picker close.
   final DateTimePickerValidator? validator;
   final DateTimePickerLabels labels;
+  // Overrides the theme's selection colour for this picker only.
+  final Color? primaryColor;
 
   const DateTimePickerConfig({
     this.mode = DateTimePickerMode.single, this.initialStart, this.initialEnd, this.firstDate, this.lastDate,
     this.allowPast = false, this.startNowOnly = false, this.todayOnly = false, this.use24HourFormat, this.minuteInterval = 1,
-    this.showNowAction = false, this.validator, this.labels = const DateTimePickerLabels(),
+    this.showNowAction = false, this.validator, this.labels = const DateTimePickerLabels(), this.primaryColor,
   }) : assert(minuteInterval > 0 && 60 % minuteInterval == 0, 'minuteInterval must divide 60'),
        assert(!allowPast || !startNowOnly, 'allowPast and startNowOnly cannot be combined'),
        assert(!startNowOnly || mode == DateTimePickerMode.range, 'startNowOnly applies to range mode only'),
@@ -40,4 +43,4 @@ class DateTimePickerConfig {
 // SUMMARY
 // Everything that shapes one picker: single or range mode, opening values, date bounds, whether past times
 // are allowed, start-now and today-only rules, time format and step, the now action, an optional async
-// validator and the labels.
+// validator, the labels and an optional primary colour.

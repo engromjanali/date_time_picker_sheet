@@ -14,6 +14,7 @@ Breaking: the 0.0.1 `DateTimePickerSheet(onConfirm: ...)` API is replaced.
 * Cancel and Confirm stack instead of overflowing on very narrow screens or with long translations.
 * Async `validator`: an error shows as a snackbar and keeps the picker open, and a loader shows while it runs.
 * `DateTimePickerThemeData` theme extension, with RTL, dark theme, semantics labels and large text supported.
+* `DateTimePickerConfig.primaryColor` sets the selection color for a single picker, with readable text on it.
 
 ## 0.0.1
 

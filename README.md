@@ -88,12 +88,17 @@ final result = await Get.dialog<DateTimePickerResult>(const DateTimePickerDialog
 | `showNowAction` | `false` | Single only. Adds a "Now" button that returns `isNow: true`. |
 | `validator` | none | `FutureOr<String?>`. Return a message to keep the picker open. |
 | `labels` | English | Every visible string, including validation messages. AM/PM default to `MaterialLocalizations`. |
+| `primaryColor` | theme | The selection color for this picker only: selected day, range band, AM/PM and buttons. Text on it turns white or black automatically. |
 
 `DateTimePickerResult` holds `start`, `end` (range only) and `isNow`.
 
 ## Theming
 
-Colors come from the app theme: `colorScheme.primary` for selection, `cardColor` for the surface. To override them, add the extension to your theme:
+Colors come from the app theme: `colorScheme.primary` for selection, `cardColor` for the surface.
+
+For one picker, pass `DateTimePickerConfig(primaryColor: ...)`. It takes priority over the theme.
+
+To override colors app-wide, add the extension to your theme:
 
 ```dart
 ThemeData(
