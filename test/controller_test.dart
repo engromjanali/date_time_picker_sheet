@@ -72,14 +72,33 @@ void main() {
       expect(controller.startDate, DateTime(2030, 3, 14));
     });
 
-    test('range taps pick a start, then an end', () {
+    test('a range opened on one day takes the first later tap as its end', () {
+      final DateTimePickerController controller = build(const DateTimePickerConfig(mode: DateTimePickerMode.range));
+      expect(controller.awaitingEnd, isTrue);
+      controller.selectDay(DateTime(2030, 3, 20));
+      expect(controller.awaitingEnd, isFalse);
+      expect(controller.startDate, DateTime(2030, 3, 14));
+      expect(controller.endDate, DateTime(2030, 3, 20));
+    });
+
+    test('once a range has an end, the next taps pick a new start, then a new end', () {
       final DateTimePickerController controller = build(const DateTimePickerConfig(mode: DateTimePickerMode.range));
       controller.selectDay(DateTime(2030, 3, 20));
+      controller.selectDay(DateTime(2030, 3, 22));
       expect(controller.awaitingEnd, isTrue);
       controller.selectDay(DateTime(2030, 3, 25));
-      expect(controller.awaitingEnd, isFalse);
-      expect(controller.startDate, DateTime(2030, 3, 20));
+      expect(controller.startDate, DateTime(2030, 3, 22));
       expect(controller.endDate, DateTime(2030, 3, 25));
+    });
+
+    test('a range opened with its own end on another day starts over on a tap', () {
+      final DateTimePickerController controller = build(DateTimePickerConfig(
+        mode: DateTimePickerMode.range, initialStart: DateTime(2030, 3, 15, 9), initialEnd: DateTime(2030, 3, 18, 9),
+      ));
+      expect(controller.awaitingEnd, isFalse);
+      controller.selectDay(DateTime(2030, 3, 20));
+      expect(controller.startDate, DateTime(2030, 3, 20));
+      expect(controller.awaitingEnd, isTrue);
     });
 
     test('a range tap before the start restarts the range', () {
@@ -107,10 +126,20 @@ void main() {
   });
 
   group('times', () {
-    test('a start time before the earliest slot today is raised to it', () {
-      final DateTimePickerController controller = build(const DateTimePickerConfig());
-      controller.setStartTime(const TimeOfDay(hour: 8, minute: 0));
-      expect(controller.startTime, const TimeOfDay(hour: 10, minute: 31));
+    test('a start time before the earliest slot is refused and the old time kept', () {
+      final DateTimePickerController controller = build(DateTimePickerConfig(initialStart: DateTime(2030, 3, 14, 12)));
+      int notifications = 0;
+      controller.addListener(() => notifications++);
+      expect(controller.setStartTime(const TimeOfDay(hour: 8, minute: 0)), isFalse);
+      expect(controller.startTime, const TimeOfDay(hour: 12, minute: 0));
+      expect(notifications, 1);
+    });
+
+    test('an end time at or before the start is refused', () {
+      final DateTimePickerController controller = build(DateTimePickerConfig(mode: DateTimePickerMode.range, initialStart: DateTime(2030, 4, 2, 9)));
+      expect(controller.setEndTime(const TimeOfDay(hour: 9, minute: 0)), isFalse);
+      expect(controller.end, DateTime(2030, 4, 2, 10));
+      expect(controller.setEndTime(const TimeOfDay(hour: 9, minute: 1)), isTrue);
     });
 
     test('an early start time on a later day is kept', () {
@@ -121,12 +150,10 @@ void main() {
       expect(controller.minimumStartTime, isNull);
     });
 
-    test('a same-day end is pushed past the start', () {
+    test('a later start pushes a same-day end past it', () {
       final DateTimePickerController controller = build(DateTimePickerConfig(mode: DateTimePickerMode.range, initialStart: DateTime(2030, 4, 2, 9)));
-      controller.selectDay(DateTime(2030, 4, 2));
-      controller.selectDay(DateTime(2030, 4, 2));
-      controller.setEndTime(const TimeOfDay(hour: 8, minute: 0));
-      expect(controller.end, DateTime(2030, 4, 2, 9, 1));
+      controller.setStartTime(const TimeOfDay(hour: 14, minute: 0));
+      expect(controller.end, DateTime(2030, 4, 2, 14, 1));
     });
 
     test('a start in the last slot of the day pushes the end into the next day', () {

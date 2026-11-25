@@ -6,7 +6,7 @@ A date and time picker that opens as a **bottom sheet** or a **dialog**. It has:
 - **Scroll-wheel time** input that works with touch, mouse, trackpad and keyboard.
 - **Single** or **range** selection.
 - Built-in rules: date bounds, "start now", "today only", and minute steps.
-- An optional **async validator** whose error is shown inside the picker.
+- An optional **async validator** whose error appears as a snackbar inside the picker.
 
 It uses only Flutter and `intl`, with no other dependencies.
 
@@ -107,8 +107,10 @@ Month names are formatted with `intl`. Apps that use `flutter_localizations` get
 
 ## Behaviour notes
 
-- Times before the earliest allowed slot are greyed out. If a wheel lands on one, it moves forward to the first allowed time.
-- In a range, the end is always kept at least one minute step after the start.
+- Times before the earliest allowed slot are greyed out. If a wheel lands on one, or the user taps a greyed AM, the picker keeps the previous time and rolls the wheel back.
+- Every message appears as a snackbar inside the picker, because a regular `ScaffoldMessenger` snackbar would be hidden behind the sheet or dialog. That covers refused times (`labels.startInPast` / `labels.endNotAfterStart`), Confirm-time validation and validator errors. The snackbar hides after 3 seconds, or as soon as the selection changes, and takes its colors from `SnackBarThemeData`.
+- A range that opens on a single day (the default) waits for its end date: the first tap on a later day becomes the end and the start stays. After that, or when the range opens with its own end on another day, a tap starts a new range and the next tap ends it.
+- In a range, moving the start later pushes a same-day end so it stays at least one minute step after the start.
 - Confirm is disabled while a wheel is still moving, so a half-finished scroll is never submitted.
 - RTL, dark theme, text scaling and screen readers are supported. Day cells announce their full date, and the wheels can be adjusted by screen readers and arrow keys.
 

@@ -21,7 +21,8 @@ class TimeWheel extends StatefulWidget {
   });
 
   static const double itemExtent = 36;
-  static const double height = 132;
+  // Exactly three rows: the picked value with one neighbour above and below.
+  static const double height = itemExtent * 3;
 
   @override
   State<TimeWheel> createState() => _TimeWheelState();

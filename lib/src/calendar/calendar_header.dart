@@ -21,7 +21,7 @@ class CalendarHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final PickerStyle style = PickerStyle.of(context);
     return SizedBox(
-      height: 48,
+      height: 40,
       child: Row(children: [
         // The title takes all the room the arrows leave, so the arrows always sit at the end.
         Expanded(child: Align(

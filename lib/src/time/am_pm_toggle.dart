@@ -16,6 +16,7 @@ class AmPmToggle extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(color: style.surface, borderRadius: BorderRadius.circular(style.cellRadius)),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
+        // A greyed AM stays tappable so the picker can explain why it is refused.
         _Segment(label: amLabel, isSelected: !isPm, isEnabled: isAmEnabled, onTap: () => onChanged(false)),
         _Segment(label: pmLabel, isSelected: isPm, isEnabled: true, onTap: () => onChanged(true)),
       ]),
@@ -39,7 +40,7 @@ class _Segment extends StatelessWidget {
       child: MergeSemantics(child: Semantics(
         selected: isSelected, button: true,
         child: InkWell(
-          onTap: isEnabled && !isSelected ? onTap : null,
+          onTap: !isSelected ? onTap : null,
           customBorder: RoundedRectangleBorder(borderRadius: radius),
           overlayColor: style.overlay,
           child: Ink(
@@ -57,5 +58,5 @@ class _Segment extends StatelessWidget {
 }
 
 // SUMMARY
-// Vertical AM and PM switch with rounded hover, focus and press feedback; AM can be disabled when the
-// earliest allowed time is already in the afternoon.
+// Vertical AM and PM switch with rounded hover, focus and press feedback; AM is greyed when the earliest
+// allowed time is already in the afternoon but still reports taps, so the picker can say why it is refused.

@@ -8,8 +8,8 @@ class DayGrid extends StatefulWidget {
   final DateTimePickerController controller;
   const DayGrid({super.key, required this.month, required this.controller});
 
-  static const double weekdayHeight = 32;
-  static const double rowHeight = 44;
+  static const double weekdayHeight = 28;
+  static const double rowHeight = 40;
 
   @override
   State<DayGrid> createState() => _DayGridState();
@@ -91,14 +91,20 @@ class _DayCell extends StatelessWidget {
     final TextStyle text = Theme.of(context).textTheme.bodyMedium!;
     final BorderRadius radius = BorderRadius.circular(style.cellRadius);
     final Color? textColor = isSelected ? style.onSelected : !isEnabled ? style.disabled : isToday ? style.selected : null;
+    // Opaque, so where the band and a band-coloured tile overlap the colour stays even instead of darkening.
+    final Color band = Color.alphaBlend(style.range, style.surface);
+    // Selectable days get a lighter tile than past ones, so what can be picked stands out.
+    final Color dayTile = isEnabled ? style.section.withValues(alpha: style.section.a / 2) : style.section;
+    // Days touching the band take its colour, so the end day reads as a full rounded cap.
+    final Color tileColor = isSelected ? style.selected : bandBefore || bandAfter ? band : dayTile;
 
     return Stack(children: [
       // A Row follows the text direction, so the first half always faces the previous day.
       Positioned.fill(child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 2),
         child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          Expanded(child: ColoredBox(color: bandBefore ? style.range : Colors.transparent)),
-          Expanded(child: ColoredBox(color: bandAfter ? style.range : Colors.transparent)),
+          Expanded(child: ColoredBox(color: bandBefore ? band : Colors.transparent)),
+          Expanded(child: ColoredBox(color: bandAfter ? band : Colors.transparent)),
         ]),
       )),
       Padding(
@@ -115,7 +121,7 @@ class _DayCell extends StatelessWidget {
               overlayColor: style.overlay,
               child: Ink(
                 decoration: BoxDecoration(
-                  color: isSelected ? style.selected : null,
+                  color: tileColor,
                   border: isToday && !isSelected ? Border.all(color: style.selected) : null,
                   borderRadius: radius,
                 ),
@@ -133,5 +139,5 @@ class _DayCell extends StatelessWidget {
 }
 
 // SUMMARY
-// Month grid of days with localised weekday headings: marks today, the selection and disabled days, draws
-// the range band between start and end, and previews the band under the mouse while an end is being picked.
+// Month grid of days on rounded tiles with localised weekday headings: marks today, the selection and
+// disabled days, draws the range band between start and end, and previews it under the mouse.

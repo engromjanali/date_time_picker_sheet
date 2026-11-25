@@ -34,6 +34,8 @@ class DateTimePickerController extends ChangeNotifier {
     final DateTime end = _initialEnd(start);
     _endDate = DateUtils.dateOnly(end);
     _endTime = TimeOfDay.fromDateTime(end);
+    // A range that opens on one day has no end picked yet, so the first tap on a later day becomes its end.
+    _awaitingEnd = config.isRange && !config.startNowOnly && _endDate == _startDate;
     _clampTimes();
   }
 
@@ -74,16 +76,30 @@ class DateTimePickerController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setStartTime(TimeOfDay time) {
+  bool setStartTime(TimeOfDay time) {
+    if (_isBefore(time, minimumStartTime)) return _reject();
     _startTime = time;
     _clampTimes();
     notifyListeners();
+    return true;
   }
 
-  void setEndTime(TimeOfDay time) {
+  bool setEndTime(TimeOfDay time) {
+    if (_isBefore(time, minimumEndTime)) return _reject();
     _endTime = time;
     _clampTimes();
     notifyListeners();
+    return true;
+  }
+
+  // Keeps the current time; notifying still rebuilds the wheels so one that landed on a blocked row rolls back.
+  bool _reject() {
+    notifyListeners();
+    return false;
+  }
+
+  static bool _isBefore(TimeOfDay time, TimeOfDay? minimum) {
+    return minimum != null && time.hour * 60 + time.minute < minimum.hour * 60 + minimum.minute;
   }
 
   String? validate() {
@@ -155,4 +171,4 @@ class DateTimePickerController extends ChangeNotifier {
 
 // SUMMARY
 // Holds the picker's selection — start and end day and time — and its rules: date bounds, slot rounding,
-// range tapping, keeping times at or after their earliest allowed slot, validation and the final result.
+// range tapping, refusing times before their earliest allowed slot, validation and the final result.

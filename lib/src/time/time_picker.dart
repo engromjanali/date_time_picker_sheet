@@ -72,4 +72,4 @@ class TimePicker extends StatelessWidget {
 
 // SUMMARY
 // Hour and minute wheels on a shared selection band, with an AM/PM switch in 12-hour mode; values before the
-// earliest allowed time are shown disabled, and every change is reported as a TimeOfDay.
+// earliest allowed time are shown disabled, and every pick — allowed or not — is reported as a TimeOfDay.

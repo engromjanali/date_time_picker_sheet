@@ -104,15 +104,34 @@ void main() {
       expect(harness.result!.start, DateTime(2030, 3, 20, 10, 30));
     });
 
-    testWidgets('a range is picked with two taps', (tester) async {
+    testWidgets('the first tap on a later day sets the end and keeps the opening start', (tester) async {
       final _Harness harness = await _open(tester, _range, size: _desktop);
-      await tester.tap(_day(16));
-      await tester.pumpAndSettle();
       await tester.tap(_day(18));
       await tester.pumpAndSettle();
       await _confirm(tester);
-      expect(harness.result!.start, DateTime(2030, 3, 16, 10, 30));
+      expect(harness.result!.start, DateTime(2030, 3, 14, 10, 30));
       expect(harness.result!.end, DateTime(2030, 3, 18, 11, 30));
+    });
+
+    testWidgets('after an end is set, two taps pick a new range', (tester) async {
+      final _Harness harness = await _open(tester, _range, size: _desktop);
+      await tester.tap(_day(18));
+      await tester.pumpAndSettle();
+      await tester.tap(_day(20));
+      await tester.pumpAndSettle();
+      await tester.tap(_day(22));
+      await tester.pumpAndSettle();
+      await _confirm(tester);
+      expect(harness.result!.start, DateTime(2030, 3, 20, 10, 30));
+      expect(harness.result!.end, DateTime(2030, 3, 22, 11, 30));
+    });
+
+    testWidgets('with the now action, all three buttons sit on one row on a phone', (tester) async {
+      await _open(tester, DateTimePickerConfig(showNowAction: true, initialStart: DateTime(2030, 3, 14, 10, 30)));
+      final double nowRow = tester.getCenter(find.text('Now')).dy;
+      expect(tester.getCenter(find.text('Cancel')).dy, moreOrLessEquals(nowRow));
+      expect(tester.getCenter(find.text('Confirm')).dy, moreOrLessEquals(nowRow));
+      expect(tester.getCenter(find.text('Now')).dx, lessThan(tester.getCenter(find.text('Cancel')).dx));
     });
 
     testWidgets('the now action returns a flagged now result', (tester) async {
@@ -245,6 +264,42 @@ void main() {
       await tester.pumpAndSettle();
       await _confirm(tester);
       expect(harness.result!.start, DateTime(2030, 3, 14, 22, 30));
+    });
+
+    testWidgets('tapping a greyed AM explains why and keeps the time', (tester) async {
+      final DateTimePickerConfig config = DateTimePickerConfig(initialStart: DateTime(2030, 3, 14, 16), firstDate: DateTime(2030, 3, 14, 15), use24HourFormat: false);
+      final _Harness harness = await _open(tester, config);
+      await tester.tap(find.text('AM'));
+      await tester.pump();
+      expect(find.text(const DateTimePickerLabels().startInPast), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pumpAndSettle();
+      expect(find.text(const DateTimePickerLabels().startInPast), findsNothing);
+      await _confirm(tester);
+      expect(harness.result!.start, DateTime(2030, 3, 14, 16));
+    });
+
+    testWidgets('a wheel that lands on a blocked minute rolls back with a note', (tester) async {
+      final DateTimePickerConfig config = DateTimePickerConfig(initialStart: DateTime(2030, 3, 14, 10, 30), firstDate: DateTime(2030, 3, 14, 10, 30), use24HourFormat: false);
+      final _Harness harness = await _open(tester, config);
+      final TestPointer mouse = TestPointer(1, PointerDeviceKind.mouse);
+      mouse.hover(tester.getCenter(find.byType(TimeWheel).at(1)));
+      await tester.sendEventToBinding(mouse.scroll(const Offset(0, -TimeWheel.itemExtent)));
+      await tester.pumpAndSettle();
+      expect(find.text(const DateTimePickerLabels().startInPast), findsOneWidget);
+
+      await _confirm(tester);
+      expect(harness.result!.start, DateTime(2030, 3, 14, 10, 30));
+    });
+
+    testWidgets('an end wheel landing before the start shows the end message', (tester) async {
+      await _open(tester, _range, size: _desktop);
+      final TestPointer mouse = TestPointer(1, PointerDeviceKind.mouse);
+      mouse.hover(tester.getCenter(find.byType(TimeWheel).at(2)));
+      await tester.sendEventToBinding(mouse.scroll(const Offset(0, -TimeWheel.itemExtent)));
+      await tester.pumpAndSettle();
+      expect(find.text(const DateTimePickerLabels().endNotAfterStart), findsOneWidget);
     });
 
     testWidgets('24-hour format hides AM and PM', (tester) async {

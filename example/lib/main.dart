@@ -60,7 +60,7 @@ class _ExampleScreenState extends State<ExampleScreen> {
   Future<String?> _weekdaysOnly(DateTimePickerResult result) async {
     // Stands in for a server check, so the confirm loader is visible.
     await Future<void>.delayed(const Duration(seconds: 1));
-    return result.start.weekday >= DateTime.saturday ? 'We are closed at weekends' : null;
+    return result.start.weekday >= DateTime.friday ? 'We are closed at weekends' : null;
   }
 
   Future<void> _open() async {
@@ -76,6 +76,7 @@ class _ExampleScreenState extends State<ExampleScreen> {
         use24HourFormat: _use24Hour,
         minuteInterval: _minuteInterval,
         validator: _rejectWeekends ? _weekdaysOnly : null,
+        labels: DateTimePickerLabels()
       ),
     );
     setState(() => _lastResult = result == null ? 'Dismissed' : _describe(result));
@@ -122,7 +123,7 @@ class _ExampleScreenState extends State<ExampleScreen> {
         SwitchListTile(title: const Text('Allow past dates and times'), value: _allowPast, onChanged: (bool value) => setState(() => _allowPast = value)),
         SwitchListTile(title: const Text('Today only'), value: _todayOnly, onChanged: (bool value) => setState(() => _todayOnly = value)),
         SwitchListTile(title: const Text('24-hour time'), value: _use24Hour, onChanged: (bool value) => setState(() => _use24Hour = value)),
-        SwitchListTile(title: const Text('Reject weekends (1 s check)'), value: _rejectWeekends, onChanged: (bool value) => setState(() => _rejectWeekends = value)),
+        SwitchListTile(title: const Text('Reject weekends (Friday) (1 s check)'), value: _rejectWeekends, onChanged: (bool value) => setState(() => _rejectWeekends = value)),
         ListTile(
           title: const Text('Minute step'),
           trailing: DropdownButton<int>(

@@ -21,12 +21,12 @@ class DateTimePickerLabels {
     this.title = 'Set Date and Time', this.rangeTitle = 'Select Start & Return Date & Time',
     this.subtitle = 'Choose your preferable date & time', this.startTime = 'Start Time', this.endTime = 'Return Time',
     this.now = 'Now', this.cancel = 'Cancel', this.confirm = 'Confirm', this.am, this.pm,
-    this.startInPast = 'You cannot select a time before the current time',
-    this.endNotAfterStart = 'Return time must be after start time', this.previousYear = 'Previous year', this.nextYear = 'Next year',
+    this.startInPast = "You can't select a past time.",
+    this.endNotAfterStart = 'Return time must be after the start time.', this.previousYear = 'Previous year', this.nextYear = 'Next year',
     this.validationFailed = 'Something went wrong. Please try again.',
   });
 }
 
 // SUMMARY
-// Every piece of text the picker shows, including its validation messages, with English defaults so each
-// app can pass its own translations.
+// Every piece of text the picker shows, including the messages for a refused or invalid start or end time,
+// with English defaults so each app can pass its own translations.
