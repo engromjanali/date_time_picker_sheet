@@ -134,6 +134,17 @@ void main() {
       expect(tester.getCenter(find.text('Now')).dx, lessThan(tester.getCenter(find.text('Cancel')).dx));
     });
 
+    testWidgets('the now action sits on the light card fill and deepens on hover', (tester) async {
+      await _open(tester, DateTimePickerConfig(showNowAction: true, initialStart: DateTime(2030, 3, 14, 10, 30)));
+      final WidgetStateProperty<Color?> background = tester.widget<TextButton>(find.widgetWithText(TextButton, 'Now')).style!.backgroundColor!;
+      final Color resting = background.resolve(<WidgetState>{})!;
+      final Color hovered = background.resolve(<WidgetState>{WidgetState.hovered})!;
+
+      final BuildContext context = tester.element(find.text('Now'));
+      expect(resting, Theme.of(context).disabledColor.withValues(alpha: 0.08));
+      expect(hovered.a, greaterThan(resting.a));
+    });
+
     testWidgets('the now action returns a flagged now result', (tester) async {
       final DateTimePickerConfig config = DateTimePickerConfig(showNowAction: true, initialStart: DateTime(2030, 3, 14, 10, 30));
       final _Harness harness = await _open(tester, config);

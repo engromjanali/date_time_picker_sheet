@@ -325,9 +325,18 @@ class _ActionBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final PickerStyle style = PickerStyle.of(context);
     final ButtonStyle textStyle = TextButton.styleFrom(foregroundColor: style.selected);
+    final Color nowHovered = style.section.withValues(alpha: (style.section.a * 2.5).clamp(0, 1));
+    final ButtonStyle nowStyle = textStyle.copyWith(
+      // The time cards' light fill at rest, a deeper shade of it under the pointer or finger.
+      backgroundColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        final bool isActive = states.contains(WidgetState.hovered) || states.contains(WidgetState.focused) || states.contains(WidgetState.pressed);
+        return isActive ? nowHovered : style.section;
+      }),
+      overlayColor: const WidgetStatePropertyAll<Color>(Colors.transparent),
+    );
     return Row(children: [
       // Natural width only; making it flexible split the bar in half and pushed Cancel and Confirm into a stack.
-      if (showNowAction) TextButton(style: textStyle, onPressed: isSubmitting ? null : onNow, child: Text(labels.now)),
+      if (showNowAction) TextButton(style: nowStyle, onPressed: isSubmitting ? null : onNow, child: Text(labels.now)),
       // Stacks Cancel over Confirm when a narrow screen or long translation cannot fit them side by side.
       Expanded(child: OverflowBar(
         alignment: MainAxisAlignment.end,
