@@ -5,8 +5,22 @@ import 'date_time_picker_result.dart';
 import 'presentation/picker_dialog.dart';
 import 'presentation/picker_sheet.dart';
 
-enum DateTimePickerPresentation { auto, sheet, dialog }
+/// How [showDateTimePicker] presents the picker.
+enum DateTimePickerPresentation {
+  /// A dialog on screens 600 logical pixels wide or more, a bottom sheet on narrower ones.
+  auto,
 
+  /// Always a bottom sheet.
+  sheet,
+
+  /// Always a dialog.
+  dialog,
+}
+
+/// Opens the picker and returns what the user picked, or null if it was dismissed.
+///
+/// The picker closes itself when the user confirms, and a [DateTimePickerConfig.validator] can keep it open until
+/// the pick is accepted.
 Future<DateTimePickerResult?> showDateTimePicker(
   BuildContext context, {
   DateTimePickerConfig config = const DateTimePickerConfig(),

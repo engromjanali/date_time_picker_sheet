@@ -13,13 +13,24 @@ import 'theme/date_time_picker_theme.dart';
 import 'time/time_picker.dart';
 import 'time/time_wheel.dart';
 
+/// The picker without a frame, for embedding in a page or in your own sheet or dialog.
+///
+/// [DateTimePickerSheet] and [DateTimePickerDialog] wrap this widget. It never closes itself: it calls [onSubmitted]
+/// with the result, or [onCancelled], and leaves the closing to you.
 class DateTimePicker extends StatefulWidget {
+  /// What the picker shows and how it behaves.
   final DateTimePickerConfig config;
+
+  /// Called with the result once the user confirms and the validator, if any, accepts it.
   final ValueChanged<DateTimePickerResult> onSubmitted;
+
+  /// Called when the user taps Cancel.
   final VoidCallback onCancelled;
+
+  /// Creates the picker body.
   const DateTimePicker({super.key, required this.config, required this.onSubmitted, required this.onCancelled});
 
-  // Below this width the calendar and the times stack instead of sitting side by side.
+  /// The width from which the calendar and the times sit side by side instead of stacking.
   static const double wideLayoutWidth = 640;
 
   @override

@@ -2,15 +2,32 @@ import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
 
+/// Overrides the picker's colors and corner radii for the whole app.
+///
+/// Add it to [ThemeData.extensions]. Anything left null falls back to the app's color scheme.
 class DateTimePickerThemeData extends ThemeExtension<DateTimePickerThemeData> {
+  /// The background of the sheet or dialog. Defaults to [ThemeData.cardColor].
   final Color? surfaceColor;
+
+  /// The color of the selected day, the AM/PM and Confirm buttons. Defaults to [ColorScheme.primary].
   final Color? selectedColor;
+
+  /// The color of text and icons on [selectedColor]. Defaults to [ColorScheme.onPrimary].
   final Color? onSelectedColor;
+
+  /// The band between the start and end day of a range. Defaults to [selectedColor] at 12% strength.
   final Color? rangeColor;
+
+  /// The fill of the day tiles and the time cards. Defaults to the disabled color at 8% strength.
   final Color? sectionColor;
+
+  /// The corner radius of day tiles and the smaller controls. Defaults to 8.
   final double? cellRadius;
+
+  /// The corner radius of the sheet or dialog. Defaults to 20.
   final double? containerRadius;
 
+  /// Creates a theme extension. Every argument is optional.
   const DateTimePickerThemeData({
     this.surfaceColor, this.selectedColor, this.onSelectedColor, this.rangeColor, this.sectionColor,
     this.cellRadius, this.containerRadius,

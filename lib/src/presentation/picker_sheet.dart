@@ -4,8 +4,16 @@ import '../date_time_picker.dart';
 import '../date_time_picker_config.dart';
 import '../picker_style.dart';
 
+/// The picker inside a bottom sheet frame.
+///
+/// Use it when you show the picker with your own route, for example `showModalBottomSheet` (with
+/// `isScrollControlled: true` and a transparent background) or a navigation package. Pops with the
+/// [DateTimePickerResult] when the user confirms, and with nothing on cancel.
 class DateTimePickerSheet extends StatelessWidget {
+  /// What the picker shows and how it behaves.
   final DateTimePickerConfig config;
+
+  /// Creates the sheet.
   const DateTimePickerSheet({super.key, this.config = const DateTimePickerConfig()});
 
   @override

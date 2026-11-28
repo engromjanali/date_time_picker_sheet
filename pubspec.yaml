@@ -1,11 +1,31 @@
 name: date_time_picker_sheet
-description: "Date and time picker shown as a bottom sheet or a dialog, with day, month and year views, scroll-wheel times, single or range selection."
+description: "A date and time picker shown as a bottom sheet or a dialog, with day, month and year views, scroll-wheel times, and single or range selection."
 version: 0.1.0
-publish_to: none
+repository: https://github.com/engromjanali/date_time_picker_sheet
+issue_tracker: https://github.com/engromjanali/date_time_picker_sheet/issues
+
+topics:
+  - date-picker
+  - time-picker
+  - calendar
+  - bottom-sheet
+  - dialog
+
+screenshots:
+  - description: "Single date and time in a bottom sheet, with the Now action."
+    path: screenshots/single_sheet.png
+  - description: "A start-to-return range in a bottom sheet, in dark theme."
+    path: screenshots/range_sheet_dark.png
+  - description: "The same picker as a dialog on a wide screen, with the calendar beside the time wheels."
+    path: screenshots/range_dialog.png
+  - description: "Month view, opened from the calendar title. Months before the earliest allowed date are disabled."
+    path: screenshots/month_view.png
+  - description: "A refused past time keeps the old time and explains why in a snackbar inside the picker."
+    path: screenshots/blocked_time.png
 
 environment:
-  sdk: ^3.14.0
-  flutter: ">=1.17.0"
+  sdk: ^3.6.0
+  flutter: ">=3.27.0"
 
 dependencies:
   flutter:

@@ -4,8 +4,15 @@ import '../date_time_picker.dart';
 import '../date_time_picker_config.dart';
 import '../picker_style.dart';
 
+/// The picker inside a dialog frame.
+///
+/// Use it when you show the picker with your own route, for example `showDialog` or a navigation package. Pops with
+/// the [DateTimePickerResult] when the user confirms, and with nothing on cancel.
 class DateTimePickerDialog extends StatelessWidget {
+  /// What the picker shows and how it behaves.
   final DateTimePickerConfig config;
+
+  /// Creates the dialog.
   const DateTimePickerDialog({super.key, this.config = const DateTimePickerConfig()});
 
   @override
